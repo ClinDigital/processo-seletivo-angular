@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ClincDTO } from 'src/app/dtos/clinc.dto';
+import { ClincService } from 'src/app/services/clinc.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-page-info',
@@ -28,24 +30,25 @@ export class PageInfoComponent implements OnInit {
     complement: new FormControl('', [])
   });
 
-  constructor(private activateRoute: ActivatedRoute){}
+  constructor(
+    private activateRoute: ActivatedRoute,
+    private clincService: ClincService,
+    private toastService: ToastService
+    ){}
 
   ngOnInit(): void {
     const paramRaw = this.activateRoute.snapshot.paramMap.get('id');
-    
+
     this.clinicId = paramRaw ? parseInt(paramRaw) : null;
     this.buttonLabel = (this.clinicId) ? 'Salvar' : 'Cadastrar';
   }
 
-  formSubmit(){
+  formSubmit() {
     let bodySubmit: ClincDTO = {
-      id: (this.clinicId) ?? undefined,
-
+      id: this.clinicId ?? undefined,
       name: this.form.get('name')?.value,
       ownerName: this.form.get('ownerName')?.value,
-
       phone: this.form.get('phone')?.value,
-
       cep: this.form.get('cep')?.value,
       uf: this.form.get('uf')?.value,
       city: this.form.get('city')?.value,
@@ -55,7 +58,25 @@ export class PageInfoComponent implements OnInit {
       complement: this.form.get('complement')?.value,
     };
 
-    console.log(`Informações da clínica para edição: ${bodySubmit.name}`);
+    if (this.clinicId) {
+      this.clincService.updateClinc(this.clinicId, bodySubmit).subscribe({
+        next: (response) => {
+          this.toastService.showSuccess('Clínica atualizada com sucesso!');
+        },
+        error: (error) => {
+          this.toastService.showError('Erro ao atualizar a clínica. Por favor preencha todos os campos.');
+        }
+      });
+    } else {
+      this.clincService.createClinc(bodySubmit).subscribe({
+        next: () => {
+          this.toastService.showSuccess('Clínica criada com sucesso!');
+        },
+        error: (err) => {
+          this.toastService.showError('Erro ao criar a clínica. Por favor verifique todos os campos.');
+        }
+      });
+    }
   }
 
 }

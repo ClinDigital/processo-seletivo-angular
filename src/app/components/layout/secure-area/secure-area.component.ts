@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { RoutesEnum } from 'src/app/enums/routes.enum';
 
 @Component({
   selector: 'app-secure-area',
@@ -7,12 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SecureAreaComponent implements OnInit {
 
-  loggedUser = 'Usuário logado';
+  constructor(
+    private route: Router,
+  ) {}
 
   logout(){
-    console.log(`Deslogou!`);
+    localStorage.removeItem('token');
+    this.route.navigate([RoutesEnum.HOME]);
+  }
+
+  sessionHome() {
+    this.route.navigate([RoutesEnum.SESSION_LIST]);
   }
 
   ngOnInit() {}
-  
+
 }

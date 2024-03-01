@@ -13,7 +13,7 @@ import { ToastService } from 'src/app/services/toast.service';
 export class PageHomeComponent {
 
   constructor(
-    private route: Router, 
+    private route: Router,
     private authService: AuthService,
     private toastService: ToastService,
   ){}
@@ -30,8 +30,8 @@ export class PageHomeComponent {
     this.authService.login(cpf, password)
     .subscribe({
       next: (value: any) => {
-        console.log(value);
-
+        alert("Logado com sucesso!");
+        localStorage.setItem('token', value.accessToken)
         this.route.navigate([RoutesEnum.SESSION_LIST]);
       },
       error: (err: any) => {

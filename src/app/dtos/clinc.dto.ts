@@ -1,7 +1,7 @@
 export interface ClincDTO {
-    
+
     id?: number;
-    
+
     name: string;
     phone: string;
 
