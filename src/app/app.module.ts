@@ -12,19 +12,23 @@ import { PageInfoComponent } from './pages/page-info/page-info.component';
 import { CardsModule } from './components/cards/cards.module';
 import { LayoutModule } from './components/layout/layout.module';
 import { NgxMaskModule } from 'ngx-mask';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { InfoClincPipe } from './pipes/info-clinc.pipe';
+import { PageRegisterComponent } from './pages/page-register/page-register.component';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { FilterPipe } from './pipes/filter.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     PageHomeComponent,
-
+    FilterPipe,
     InfoClincPipe,
 
     DefaultToastComponent,
     PageListComponent,
     PageInfoComponent,
+    PageRegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,7 +43,7 @@ import { InfoClincPipe } from './pipes/info-clinc.pipe';
     CardsModule,
     LayoutModule,
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

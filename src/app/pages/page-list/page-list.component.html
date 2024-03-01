@@ -1,24 +1,34 @@
 <div class="container mt-4">
 
-    <div class="container text-center mb-3">
-        <button (click)="redirectNewClinc()" class="btn btn-primary mt-3 col-md-4">Criar nova clínica</button>
-    </div>
+  <div class="text-center mb-3">
+      <button (click)="redirectNewClinc()" class="btn btn-primary">Criar nova clínica</button>
+  </div>
 
-    <div class="row" style="justify-content: center;">
+  <div class="mb-3">
+    <input type="text" class="form-control" [(ngModel)]="searchTerm" placeholder="Pesquisar clínica...">
+  </div>
 
-        <default-card
-            *ngFor="let clinc of clinics"
-            class="m-2"
-            [title]="clinc.name" 
-            subtitle="Responsavel: {{clinc.ownerName}}"
-            [info]="clinc | clincInfo"
-    
-            leftButtonLabel="Remover"
-            (onClickLeftButton)="delete(clinc?.id)"
+  <div class="row" style="justify-content: center;">
+      <div *ngFor="let clinc of clinics | filter: searchTerm" class="col-md-4 mb-4">
+          <div class="card">
+              <div class="card-header">
+                  {{ clinc.name }}
+              </div>
+              <div class="card-body">
+                <p><strong>Responsável:</strong> {{ clinc.ownerName }}</p>
 
-            rightButtonLabel="Editar clínica"
-            (onClickRightButton)="edit(clinc?.id)"
-        ></default-card>
+                <p><strong>Telefone:</strong> {{ clinc.phone }}</p>
 
-    </div>
+                <p><strong>Endereço:</strong> {{ clinc.street }}, {{ clinc.number }} - {{ clinc.neighborhood }}, {{ clinc.city }} - {{ clinc.uf }}</p>
+
+                <p><strong>CEP:</strong> {{ clinc.cep }}</p>
+
+                <div class="container d-flex gap-2 justify-content-between">
+                  <button (click)="edit(clinc.id)" class="btn btn-primary col-6">Editar</button>
+                  <button (click)="delete(clinc.id)" class="btn btn-danger col-6">Excluir</button>
+                </div>
+              </div>
+          </div>
+      </div>
+  </div>
 </div>
